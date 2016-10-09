@@ -26,7 +26,7 @@ As you might already know, [javadoc.io](http://www.javadoc.io) serves apidocs.
 http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-x.y.z.some/a.b.c
 ```
 
-e.g. See for [cubrid-jdbc-driver-9.2.26.0004](http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-9.2.26.0004/1.0.0).
+e.g. See for [cubrid-jdbc-driver-9.2.26.0004/1.0.0](http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-9.2.26.0004/1.0.0).
 
 ## Want any artifact of specific version available on the central?
 
