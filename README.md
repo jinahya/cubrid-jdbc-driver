@@ -2,8 +2,6 @@
 
 This repository aims to upload [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to [Maven Central Repository](http://search.maven.org/).
 
-## CUBRID JDBC Maven Repository
-
 You can, of course, use [CUBRID JDBC Maven Repository](http://www.cubrid.org/wiki_apis/entry/cubrid-jdbc-maven-repository) if you don't mind adding it to your POM.
 
 ## Maven Central Repository
@@ -19,6 +17,16 @@ You just can use it like this.
   <version>a.b.c</version>
 </dependency>
 ```
+
+## javadoc.io
+
+As you might already know, [javadoc.io](http://www.javadoc.io) serves apidocs.
+
+```
+http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-x.y.z.some/a.b.c
+```
+
+e.g. See for [cubrid-jdbc-driver-9.2.26.0004](http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-9.2.26.0004/1.0.0).
 
 ## Want any artifact of specific version available on the central?
 
