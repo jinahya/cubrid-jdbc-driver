@@ -6,7 +6,7 @@ You can, of course, use [CUBRID JDBC Maven Repository](http://www.cubrid.org/wik
 
 ## Maven Central Repository
 
-See artifacts already available on [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Ccubrid-jdbc-driver).
+See [artifacts already available on Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Ccubrid-jdbc-driver).
 
 You just can use it like this.
 
