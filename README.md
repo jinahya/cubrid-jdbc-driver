@@ -2,7 +2,7 @@
 
 This repository aims to upload [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to [Maven Central Repository](http://search.maven.org/).
 
-You can, of course, use [CUBRID JDBC Maven Repository](http://www.cubrid.org/wiki_apis/entry/cubrid-jdbc-maven-repository) if you don't mind adding it to your POM.
+You can, of course, use [CUBRID JDBC Maven Repository](http://www.cubrid.org/wiki_apis/entry/cubrid-jdbc-maven-repository) if you don't mind adding it to your `pom.xml` or `settings.xml`.
 
 ## Maven Central Repository
 
