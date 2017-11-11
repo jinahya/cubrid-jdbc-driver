@@ -10,7 +10,7 @@
 
   <groupId>com.github.jinahya</groupId>
   <artifactId>cubrid-jdbc-driver-10.1.0.7663</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>cubrid-jdbc-driver</name>
@@ -27,7 +27,7 @@
     <connection>scm:git:git@github.com:jinahya/cubrid-jdbc-driver.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/cubrid-jdbc-driver.git</developerConnection>
     <url>https://github.com/jinahya/cubrid-jdbc-driver</url>
-    <tag>HEAD</tag>
+    <tag>10.1.0.7663-1.0.0</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issues</system>
