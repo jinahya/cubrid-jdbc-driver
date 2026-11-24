@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+#
+# Adds (or re-creates) the module drivers/<version> from CUBRID's ftp source jar.
+#
+#   scripts/add-version.sh <version>...
+#
+# - The sources/resources are extracted byte-for-byte; nothing is modified (including encodings and line endings).
+# - The source encoding is detected (UTF-8, or CP949 if not valid UTF-8); the files are never converted.
+# - maven.compiler.release is detected as the lowest release (minimum 8) the sources compile with,
+#   using the javac of JAVA_HOME (or the one on PATH).
+# - The <modules> of the root pom.xml is regenerated from drivers/*/pom.xml.
+#
+set -euo pipefail
+
+FTP_BASE=${FTP_BASE:-http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver}
+MIN_RELEASE=8
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+javac=${JAVA_HOME:+$JAVA_HOME/bin/}javac
+max_release=$("$javac" -version 2>&1 | sed -E 's/^javac ([0-9]+).*/\1/')
+
+die() { echo "error: $*" >&2; exit 1; }
+
+regenerate_modules() {
+  local pom=$root/pom.xml tmp
+  tmp=$(mktemp)
+  {
+    sed -n '1,/<!-- modules:begin/p' "$pom"
+    echo "  <modules>"
+    for d in $(cd "$root/drivers" && ls -d */ 2>/dev/null | tr -d / | sort -V); do
+      [ -f "$root/drivers/$d/pom.xml" ] && echo "    <module>drivers/$d</module>"
+    done
+    echo "  </modules>"
+    sed -n '/<!-- modules:end/,$p' "$pom"
+  } > "$tmp"
+  mv "$tmp" "$pom"
+}
+
+add_version() {
+  local version=$1
+  [[ $version =~ ^[0-9]+(\.[0-9]+)+$ ]] || die "invalid version: $version"
+  local url=$FTP_BASE/JDBC-$version-cubrid-src.jar
+  local module=$root/drivers/$version
+  local work
+  work=$(mktemp -d)
+  trap 'rm -rf "$work"' RETURN
+
+  echo "[$version] downloading $url"
+  curl -fsSL -o "$work/src.jar" "$url" || die "[$version] failed to download $url"
+  local sha256
+  sha256=$(shasum -a 256 "$work/src.jar" | cut -d' ' -f1)
+
+  unzip -Z1 "$work/src.jar" > "$work/entries" || die "[$version] $url is not a valid jar"
+  grep -q '\.java$' "$work/entries" || die "[$version] $url contains no .java files"
+
+  # extract; duplicate entries (present in many CUBRID jars) are identical, so -o is safe
+  rm -rf "$module/src"
+  mkdir -p "$module/src/main/java" "$module/src/main/resources"
+  unzip -qo "$work/src.jar" '*.java' -d "$module/src/main/java"
+  unzip -qo "$work/src.jar" -x '*.java' '*/' 'META-INF/*' -d "$module/src/main/resources" 2>/dev/null || true
+  find "$module/src/main/resources" -type d -empty -delete 2>/dev/null || true
+
+  # detect the encoding; never convert
+  local encoding=UTF-8 f
+  find "$module/src/main/java" -name '*.java' > "$work/files"
+  while IFS= read -r f; do
+    if ! iconv -f UTF-8 -t UTF-8 < "$f" > /dev/null 2>&1; then
+      encoding=x-windows-949
+      break
+    fi
+  done < "$work/files"
+  if [ "$encoding" != UTF-8 ]; then
+    while IFS= read -r f; do
+      iconv -f CP949 -t UTF-8 < "$f" > /dev/null 2>&1 || die "[$version] $f is neither UTF-8 nor CP949"
+    done < "$work/files"
+  fi
+
+  # detect the source root from the package declarations; some src jars (e.g. 11.1.0.0027) put sources under a prefix
+  local prefix="" first=1 p dir pkgdir fp
+  while IFS= read -r f; do
+    p=$(sed -nE 's/^[[:space:]]*package[[:space:]]+([A-Za-z0-9_.]+)[[:space:]]*;.*/\1/p' "$f" | head -1)
+    dir=$(dirname "${f#"$module/src/main/java/"}")
+    [ "$dir" = . ] && dir=""
+    pkgdir=${p//.//}
+    if [ -z "$pkgdir" ]; then fp=$dir; else
+      case "/$dir" in */"$pkgdir") fp=${dir%"$pkgdir"} ; fp=${fp%/} ;; *) die "[$version] $f: package $p does not match its path" ;; esac
+    fi
+    if [ $first = 1 ]; then prefix=$fp; first=0; elif [ "$fp" != "$prefix" ]; then die "[$version] multiple source roots: '$prefix' and '$fp'"; fi
+  done < "$work/files"
+
+  # detect the lowest release that compiles
+  local release="" r
+  for r in $(seq "$MIN_RELEASE" "$max_release"); do
+    rm -rf "$work/classes"
+    if "$javac" -nowarn -Xlint:-options -encoding "$encoding" --release "$r" -d "$work/classes" @"$work/files" > "$work/javac-$r.log" 2>&1; then
+      release=$r
+      break
+    fi
+  done
+  [ -n "$release" ] || die "[$version] does not compile with any release in [$MIN_RELEASE, $max_release]; see $(cat "$work/javac-$max_release.log" | head -20)"
+
+  local encoding_property=""
+  if [ "$encoding" != UTF-8 ]; then
+    encoding_property="
+    <!-- detected; the sources are kept as is -->
+    <project.build.sourceEncoding>$encoding</project.build.sourceEncoding>"
+  fi
+
+  local build_element=""
+  if [ -n "$prefix" ]; then
+    build_element="
+
+  <build>
+    <!-- detected; the src jar has its sources under '$prefix/', which is kept as is -->
+    <sourceDirectory>src/main/java/$prefix</sourceDirectory>
+  </build>"
+  fi
+
+  cat > "$module/pom.xml" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- generated by scripts/add-version.sh -->
+
+  <parent>
+    <groupId>io.github.jinahya</groupId>
+    <artifactId>cubrid-jdbc-driver-parent</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>cubrid-jdbc-driver</artifactId>
+  <version>$version</version>
+  <packaging>jar</packaging>
+
+  <name>cubrid-jdbc-driver</name>
+
+  <properties>
+    <!-- the unmodified sources in src/ are extracted from this jar -->
+    <cubrid.source.url>$url</cubrid.source.url>
+    <cubrid.source.sha256>$sha256</cubrid.source.sha256>
+    <!-- detected; the lowest release (minimum $MIN_RELEASE) the sources compile with -->
+    <maven.compiler.release>$release</maven.compiler.release>$encoding_property
+  </properties>$build_element
+</project>
+EOF
+  echo "[$version] release=$release encoding=$encoding"
+}
+
+[ $# -gt 0 ] || die "usage: $0 <version>..."
+for v in "$@"; do
+  add_version "$v"
+done
+regenerate_modules

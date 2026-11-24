@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.project.url.inherit.append.path="false">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.github.jinahya</groupId>
+    <groupId>io.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.7.6</version>
+    <!-- https://central.sonatype.com/artifact/io.github.jinahya/jinahya-parent/versions -->
+    <version>1.1.4</version>
+    <relativePath/>
   </parent>
 
-  <groupId>com.github.jinahya</groupId>
-  <artifactId>cubrid-jdbc-driver-x.y.z.update</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <!--
+    Aggregator/parent for every driver module under drivers/.
+    This pom itself is never published; each module's pom is flattened (no parent) before publishing.
+  -->
+  <groupId>io.github.jinahya</groupId>
+  <artifactId>cubrid-jdbc-driver-parent</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
 
   <name>cubrid-jdbc-driver</name>
+  <description>CUBRID JDBC Driver ${project.version}, built from CUBRID's unmodified sources</description>
   <url>https://github.com/jinahya/cubrid-jdbc-driver</url>
   <licenses>
     <license>
-      <name>The BSD 3-Clause License</name>
+      <name>BSD-3-Clause</name>
       <url>https://opensource.org/licenses/BSD-3-Clause</url>
       <distribution>repo</distribution>
+      <comments>The license of the CUBRID JDBC Driver sources</comments>
     </license>
   </licenses>
 
-  <scm>
+  <scm child.scm.connection.inherit.append.path="false"
+       child.scm.developerConnection.inherit.append.path="false"
+       child.scm.url.inherit.append.path="false">
     <connection>scm:git:git@github.com:jinahya/cubrid-jdbc-driver.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/cubrid-jdbc-driver.git</developerConnection>
     <url>https://github.com/jinahya/cubrid-jdbc-driver</url>
@@ -35,32 +46,275 @@
   </issueManagement>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
+    <!-- Every module overrides this with the lowest release its sources compile with (see scripts/add-version.sh). -->
+    <maven.compiler.release>8</maven.compiler.release>
+    <project.build.outputTimestamp>2026-11-25T00:00:00Z</project.build.outputTimestamp>
   </properties>
 
+  <!-- modules:begin (maintained by scripts/add-version.sh; do not edit by hand) -->
+  <modules>
+    <module>drivers/8.4.1.3024</module>
+    <module>drivers/8.4.1.4001</module>
+    <module>drivers/8.4.1.5002</module>
+    <module>drivers/8.4.1.6004</module>
+    <module>drivers/8.4.1.7007</module>
+    <module>drivers/8.4.1.12002</module>
+    <module>drivers/8.4.1.21001</module>
+    <module>drivers/8.4.1.23002</module>
+    <module>drivers/8.4.1.24002</module>
+    <module>drivers/8.4.1.25004</module>
+    <module>drivers/8.4.1.28003</module>
+    <module>drivers/8.4.1.29001</module>
+    <module>drivers/8.4.1.30011</module>
+    <module>drivers/8.4.1.31007</module>
+    <module>drivers/8.4.1.32003</module>
+    <module>drivers/8.4.1.33006</module>
+    <module>drivers/8.4.1.34002</module>
+    <module>drivers/8.4.1.35003</module>
+    <module>drivers/8.4.3.0150</module>
+    <module>drivers/8.4.3.1005</module>
+    <module>drivers/8.4.3.3001</module>
+    <module>drivers/8.4.3.4002</module>
+    <module>drivers/8.4.3.5001</module>
+    <module>drivers/8.4.3.6001</module>
+    <module>drivers/8.4.3.7001</module>
+    <module>drivers/8.4.3.8002</module>
+    <module>drivers/8.4.3.9001</module>
+    <module>drivers/8.4.3.10001</module>
+    <module>drivers/8.4.3.11001</module>
+    <module>drivers/8.4.4.0227</module>
+    <module>drivers/8.4.4.1001</module>
+    <module>drivers/8.4.4.3003</module>
+    <module>drivers/8.4.4.4007</module>
+    <module>drivers/8.4.4.5002</module>
+    <module>drivers/8.4.4.6001</module>
+    <module>drivers/8.4.4.7004</module>
+    <module>drivers/8.4.4.8004</module>
+    <module>drivers/8.4.4.9008</module>
+    <module>drivers/8.4.4.10001</module>
+    <module>drivers/8.4.4.11004</module>
+    <module>drivers/8.4.4.12003</module>
+    <module>drivers/8.4.4.13002</module>
+    <module>drivers/8.4.4.14008</module>
+    <module>drivers/8.4.4.15002</module>
+    <module>drivers/8.4.4.16002</module>
+    <module>drivers/8.4.4.17007</module>
+    <module>drivers/8.4.4.18002</module>
+    <module>drivers/8.4.4.19002</module>
+    <module>drivers/9.0.0.0478</module>
+    <module>drivers/9.1.0.0212</module>
+    <module>drivers/9.2.0.0155</module>
+    <module>drivers/9.2.1.0020</module>
+    <module>drivers/9.2.3.0005</module>
+    <module>drivers/9.2.5.0001</module>
+    <module>drivers/9.2.6.0002</module>
+    <module>drivers/9.2.9.0002</module>
+    <module>drivers/9.2.10.0001</module>
+    <module>drivers/9.2.11.0005</module>
+    <module>drivers/9.2.12.0006</module>
+    <module>drivers/9.2.13.0003</module>
+    <module>drivers/9.2.14.0004</module>
+    <module>drivers/9.2.15.0002</module>
+    <module>drivers/9.2.16.0003</module>
+    <module>drivers/9.2.17.0002</module>
+    <module>drivers/9.2.18.0004</module>
+    <module>drivers/9.2.19.0003</module>
+    <module>drivers/9.2.20.0003</module>
+    <module>drivers/9.2.21.0005</module>
+    <module>drivers/9.2.22.0003</module>
+    <module>drivers/9.2.23.0002</module>
+    <module>drivers/9.2.24.0002</module>
+    <module>drivers/9.2.25.0003</module>
+    <module>drivers/9.2.26.0004</module>
+    <module>drivers/9.2.27.0010</module>
+    <module>drivers/9.2.28.0004</module>
+    <module>drivers/9.2.29.0001</module>
+    <module>drivers/9.2.30.0004</module>
+    <module>drivers/9.3.0.0206</module>
+    <module>drivers/9.3.1.0005</module>
+    <module>drivers/9.3.2.0016</module>
+    <module>drivers/9.3.3.0014</module>
+    <module>drivers/9.3.4.0002</module>
+    <module>drivers/9.3.5.0002</module>
+    <module>drivers/9.3.6.0002</module>
+    <module>drivers/9.3.7.0008</module>
+    <module>drivers/9.3.8.0003</module>
+    <module>drivers/9.3.9.0002</module>
+    <module>drivers/10.0.0.1376</module>
+    <module>drivers/10.1.0.7663</module>
+    <module>drivers/10.1.1.7691</module>
+    <module>drivers/10.1.2.7694</module>
+    <module>drivers/10.1.3.7765</module>
+    <module>drivers/10.1.4.7800</module>
+    <module>drivers/10.1.5.7809</module>
+    <module>drivers/10.1.6.7817</module>
+    <module>drivers/10.1.7.7819</module>
+    <module>drivers/10.1.8.7823</module>
+    <module>drivers/10.2.0.8797</module>
+    <module>drivers/10.2.1.8849</module>
+    <module>drivers/10.2.2.8874</module>
+    <module>drivers/10.2.3.8881</module>
+    <module>drivers/10.2.4.8884</module>
+    <module>drivers/10.2.5.8886</module>
+    <module>drivers/10.2.6.8891</module>
+    <module>drivers/10.2.7.8896</module>
+    <module>drivers/10.2.8.8904</module>
+    <module>drivers/10.2.10.8925</module>
+    <module>drivers/10.2.11.8944</module>
+    <module>drivers/10.2.12.8947</module>
+    <module>drivers/10.2.13.8952</module>
+    <module>drivers/10.2.14.8955</module>
+    <module>drivers/10.2.15.8978</module>
+    <module>drivers/10.2.16.8997</module>
+    <module>drivers/10.2.17.9008</module>
+    <module>drivers/10.2.18.9024</module>
+    <module>drivers/10.2.19.9052</module>
+    <module>drivers/11.0.0.0248</module>
+    <module>drivers/11.0.1.0286</module>
+    <module>drivers/11.0.2.0291</module>
+    <module>drivers/11.0.3.0293</module>
+    <module>drivers/11.0.4.0297</module>
+    <module>drivers/11.0.5.0299</module>
+    <module>drivers/11.0.6.0313</module>
+    <module>drivers/11.0.7.0317</module>
+    <module>drivers/11.0.8.0319</module>
+    <module>drivers/11.0.9.0331</module>
+    <module>drivers/11.0.10.0341</module>
+    <module>drivers/11.0.11.0365</module>
+    <module>drivers/11.0.12.0375</module>
+    <module>drivers/11.0.13.0378</module>
+    <module>drivers/11.0.14.0388</module>
+    <module>drivers/11.0.15.0402</module>
+    <module>drivers/11.0.16.0419</module>
+    <module>drivers/11.0.17.0452</module>
+    <module>drivers/11.1.0.0027</module>
+    <module>drivers/11.1.1.0028</module>
+    <module>drivers/11.1.1.0030</module>
+    <module>drivers/11.2.0.0035</module>
+    <module>drivers/11.2.1.0038</module>
+    <module>drivers/11.2.1.0040</module>
+    <module>drivers/11.3.0.0047</module>
+    <module>drivers/11.3.1.0050</module>
+    <module>drivers/11.3.2.0053</module>
+  </modules>
+  <!-- modules:end -->
+
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.16.0</version>
+          <configuration>
+            <compilerArgs>
+              <!-- "source/target value 8 is obsolete" -->
+              <arg>-Xlint:-options</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.5.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <!-- CUBRID's javadoc comments are not doclint-clean; we do not modify sources. -->
+            <doclint>none</doclint>
+            <quiet>true</quiet>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>1.10.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <configuration>
+            <excludeArtifacts>
+              <artifact>cubrid-jdbc-driver-parent</artifact>
+            </excludeArtifacts>
+            <!-- allows publishing the whole reactor; versions already on the Central are skipped -->
+            <ignorePublishedComponents>true</ignorePublishedComponents>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.15</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>check-signature-java16</id>
-            <phase>process-classes</phase> <!-- default -->
+            <id>enforce-java</id>
             <goals>
-              <goal>check</goal>
+              <goal>enforce</goal>
             </goals>
             <configuration>
-              <signature>
-                <groupId>org.codehaus.mojo.signature</groupId>
-                <artifactId>java16</artifactId>
-                <version>1.1</version>
-              </signature>
+              <rules>
+                <requireJavaVersion>
+                  <version>[25,)</version>
+                </requireJavaVersion>
+              </rules>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <configuration>
+          <flattenMode>ossrh</flattenMode>
+          <updatePomFile>true</updatePomFile>
+          <pomElements>
+            <!-- do not leak jinahya-parent's (GitHub Packages) repositories to the published poms -->
+            <repositories>remove</repositories>
+          </pomElements>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

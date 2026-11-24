@@ -1,0 +1,3 @@
+# CUBRID's sources and resources are kept byte-for-byte as shipped in the ftp src jars.
+# Disable any end-of-line conversion (e.g. core.autocrlf) for them.
+/drivers/*/src/** -text
