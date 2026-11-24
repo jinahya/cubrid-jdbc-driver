@@ -1,14 +1,45 @@
 # cubrid-jdbc-driver
 
-This repository aims to upload [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to [Maven Central Repository](http://search.maven.org/).
+> **This repository is in the attic and may be removed.**
+>
+> CUBRID now publishes its JDBC driver to Maven Central under its own coordinates.
+> Use the official artifact instead:
+>
+> | | |
+> |---|---|
+> | groupId | `org.cubrid` |
+> | artifactId | `cubrid-jdbc` |
+> | coordinates | `org.cubrid:cubrid-jdbc` |
+> | repository | [repo1.maven.org/maven2/org/cubrid/cubrid-jdbc](https://repo1.maven.org/maven2/org/cubrid/cubrid-jdbc/) |
+>
+> Maven
+>
+> ```xml
+> <dependency>
+>   <groupId>org.cubrid</groupId>
+>   <artifactId>cubrid-jdbc</artifactId>
+>   <version>11.3.2.0053</version>
+> </dependency>
+> ```
+>
+> Gradle
+>
+> ```groovy
+> implementation 'org.cubrid:cubrid-jdbc:11.3.2.0053'
+> ```
+>
+> See [org.cubrid:cubrid-jdbc](https://central.sonatype.com/artifact/org.cubrid/cubrid-jdbc) for available versions.
+> No further versions will be published from this repository, and requests for new versions will not be accepted.
 
-You can, of course, use [CUBRID JDBC Maven Repository](http://maven.cubrid.org/) if you don't mind adding it to your `pom.xml` or `settings.xml`.
+## History
 
-## Maven Central Repository
+This repository was used to upload [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to [Maven Central Repository](https://central.sonatype.com/), before CUBRID published them officially.
 
-See [artifacts already available on Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Ccubrid-jdbc-driver).
+For versions not (yet) available under `org.cubrid`, you can use the [CUBRID JDBC Maven Repository](https://maven.cubrid.org/).
 
-You just can use it like this.
+## Previously published artifacts
+
+Artifacts already published under `com.github.jinahya` remain available on Maven Central (they cannot be removed from there), but are no longer maintained.
 
 ```xml
 <dependency>
@@ -18,16 +49,4 @@ You just can use it like this.
 </dependency>
 ```
 
-## javadoc.io
-
-As you might already know, [javadoc.io](http://www.javadoc.io) serves apidocs.
-
-```
-http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-x.y.z.some/a.b.c
-```
-
-e.g. See for [cubrid-jdbc-driver-9.2.26.0004/1.0.0](http://www.javadoc.io/doc/com.github.jinahya/cubrid-jdbc-driver-9.2.26.0004/1.0.0).
-
-## Want any artifact of specific version be available on the central?
-
-Just add an issue. I'll do it for you. It won't take long.
+See [the list of those artifacts](https://central.sonatype.com/search?q=g:com.github.jinahya%20cubrid-jdbc-driver).
