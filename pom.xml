@@ -195,7 +195,6 @@
     <module>drivers/11.2.1.0040</module>
     <module>drivers/11.3.0.0047</module>
     <module>drivers/11.3.1.0050</module>
-    <module>drivers/11.3.2.0053</module>
   </modules>
   <!-- modules:end -->
 
@@ -249,8 +248,18 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.22.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.6.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.6.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -320,4 +329,56 @@
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <!-- added by maven-site-plugin by default; declared to pin its version -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.9.0</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <profiles>
+    <profile>
+      <!--
+        Active in every driver module (not in this aggregator). Fails the build if any file under src/main is not
+        strictly decodable in the module's project.build.sourceEncoding, which is also what javac and javadoc use.
+      -->
+      <id>check-encoding</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/src/main/java</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>check-encoding</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>${java.home}/bin/java</executable>
+                  <arguments>
+                    <argument>${project.basedir}/../../scripts/CheckEncoding.java</argument>
+                    <argument>${project.build.sourceEncoding}</argument>
+                    <argument>${project.basedir}/src/main/java</argument>
+                    <argument>${project.basedir}/src/main/resources</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

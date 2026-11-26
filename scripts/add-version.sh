@@ -5,7 +5,8 @@
 #   scripts/add-version.sh <version>...
 #
 # - The sources/resources are extracted byte-for-byte; nothing is modified (including encodings and line endings).
-# - The source encoding is detected (UTF-8, or CP949 if not valid UTF-8); the files are never converted.
+# - The source encoding is detected (UTF-8, or CP949 if not valid UTF-8) and always declared as
+#   project.build.sourceEncoding; the files are never converted. The build verifies it (scripts/CheckEncoding.java).
 # - maven.compiler.release is detected as the lowest release (minimum 8) the sources compile with,
 #   using the javac of JAVA_HOME (or the one on PATH).
 # - The <modules> of the root pom.xml is regenerated from drivers/*/pom.xml.
@@ -99,12 +100,9 @@ add_version() {
   done
   [ -n "$release" ] || die "[$version] does not compile with any release in [$MIN_RELEASE, $max_release]; see $(cat "$work/javac-$max_release.log" | head -20)"
 
-  local encoding_property=""
-  if [ "$encoding" != UTF-8 ]; then
-    encoding_property="
-    <!-- detected; the sources are kept as is -->
+  local encoding_property="
+    <!-- detected; the sources are kept as is, and verified in the build (see the check-encoding profile) -->
     <project.build.sourceEncoding>$encoding</project.build.sourceEncoding>"
-  fi
 
   local build_element=""
   if [ -n "$prefix" ]; then

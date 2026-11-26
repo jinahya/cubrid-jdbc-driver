@@ -1,8 +1,19 @@
 # cubrid-jdbc-driver
 
-Publishes [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to the [Maven Central Repository](https://central.sonatype.com/), built from CUBRID's **unmodified** sources.
+Publishes **older** [CUBRID JDBC Drivers](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) to the [Maven Central Repository](https://central.sonatype.com/), built from CUBRID's **unmodified** sources.
 
-CUBRID hosts its drivers on its own [Maven repository](https://maven.cubrid.org/) (`cubrid:cubrid-jdbc`), which requires extra repository configuration and has no sources or javadoc jars. CUBRID itself publishes only `11.3.2.0053` to the Central, as [`org.cubrid:cubrid-jdbc`](https://central.sonatype.com/artifact/org.cubrid/cubrid-jdbc). This repository covers every other version for which CUBRID provides sources.
+> [!IMPORTANT]
+> CUBRID publishes its JDBC driver to the Central itself, as [`org.cubrid:cubrid-jdbc`](https://central.sonatype.com/artifact/org.cubrid/cubrid-jdbc). **Use that whenever it has the version you need** (currently `11.3.2.0053`, and presumably every later version).
+>
+> ```xml
+> <dependency>
+>   <groupId>org.cubrid</groupId>
+>   <artifactId>cubrid-jdbc</artifactId>
+>   <version>11.3.2.0053</version>
+> </dependency>
+> ```
+
+This repository is a frozen backfill of the versions **not** on the Central. CUBRID hosts those on its own [Maven repository](https://maven.cubrid.org/) (`cubrid:cubrid-jdbc`), which requires extra repository configuration and has no sources or javadoc jars. Versions published as `org.cubrid:cubrid-jdbc` are deliberately excluded, so that the same driver is never available under two coordinates.
 
 ## Usage
 
@@ -12,19 +23,21 @@ The version is CUBRID's version, as is.
 <dependency>
   <groupId>io.github.jinahya</groupId>
   <artifactId>cubrid-jdbc-driver</artifactId>
-  <version>11.3.2.0053</version>
+  <version>11.3.1.0050</version>
 </dependency>
 ```
 
 ```groovy
-implementation 'io.github.jinahya:cubrid-jdbc-driver:11.3.2.0053'
+implementation 'io.github.jinahya:cubrid-jdbc-driver:11.3.1.0050'
 ```
+
+Do not depend on both `org.cubrid:cubrid-jdbc` and this artifact; both contain the `cubrid.jdbc.*` classes.
 
 Each version comes with `-sources.jar` and `-javadoc.jar`, and requires Java 8 or later.
 
 ## Versions
 
-Each version on [maven.cubrid.org](https://maven.cubrid.org/cubrid/cubrid-jdbc/) whose source jar (`JDBC-<version>-cubrid-src.jar`) is on [ftp.cubrid.org](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) is a module under [`drivers/`](drivers). 143 versions in total.
+Each version on [maven.cubrid.org](https://maven.cubrid.org/cubrid/cubrid-jdbc/) whose source jar (`JDBC-<version>-cubrid-src.jar`) is on [ftp.cubrid.org](http://ftp.cubrid.org/CUBRID_Drivers/JDBC_Driver/) is a module under [`drivers/`](drivers), unless it is on the Central as `org.cubrid:cubrid-jdbc`. 142 versions in total.
 
 | Line | # | Versions |
 |---|---|---|
@@ -39,7 +52,7 @@ Each version on [maven.cubrid.org](https://maven.cubrid.org/cubrid/cubrid-jdbc/)
 | 11.0 | 18 | `11.0.0.0248`, `11.0.1.0286`, `11.0.2.0291`, `11.0.3.0293`, `11.0.4.0297`, `11.0.5.0299`, `11.0.6.0313`, `11.0.7.0317`, `11.0.8.0319`, `11.0.9.0331`, `11.0.10.0341`, `11.0.11.0365`, `11.0.12.0375`, `11.0.13.0378`, `11.0.14.0388`, `11.0.15.0402`, `11.0.16.0419`, `11.0.17.0452` |
 | 11.1 | 3 | `11.1.0.0027`, `11.1.1.0028`, `11.1.1.0030` |
 | 11.2 | 3 | `11.2.0.0035`, `11.2.1.0038`, `11.2.1.0040` |
-| 11.3 | 3 | `11.3.0.0047`, `11.3.1.0050`, `11.3.2.0053` |
+| 11.3 | 2 | `11.3.0.0047`, `11.3.1.0050` |
 
 Not available, for lack of sources:
 
@@ -52,9 +65,15 @@ Not available, for lack of sources:
 
 `drivers/<version>/src/main/{java,resources}` are extracted byte-for-byte from `JDBC-<version>-cubrid-src.jar`, whose URL and SHA-256 are recorded in each module's `pom.xml`. That includes encodings and line endings ([`.gitattributes`](.gitattributes) disables EOL conversion).
 
-* All sources are ASCII or UTF-8. A few Korean comments in CUBRID's sources were already irreversibly replaced with `U+FFFD` (`�`) on CUBRID's side, and are kept as they are; this affects comments only.
+* All sources and resources are ASCII or UTF-8, with no byte order marks. A few Korean javadoc comments in `cubrid/jdbc/jci/*` (4–5 files per version) were already irreversibly replaced with `U+FFFD` (`�`) on CUBRID's side, and are kept as they are; this affects comments only.
 * `11.1.0.0027`'s source jar puts its sources under `jdbc/`; the module points `sourceDirectory` at it instead of moving files. That jar also lacks `sql-error-codes.xml`, so the artifact does too; and it contains sources of `java.sql`/`javax.sql` stubs, which are compiled and included as CUBRID's own binary does (harmless; the JDK's classes always take precedence).
 * CUBRID's own binaries of some old versions (`8.4.1.3024` – `9.2.1.0020`) bundle compiled `java.sql` stubs (`NClob`, `RowId`, ...) that are not in the sources. They are not needed with Java 8+, and are not included.
+
+### Source encoding
+
+Each module declares its sources' encoding as `project.build.sourceEncoding`, detected by `scripts/add-version.sh` (`UTF-8`, or `x-windows-949` if the sources are not valid UTF-8; currently `UTF-8` for every version). The files are never converted; javac and javadoc read them in that encoding.
+
+The build verifies it: the `check-encoding` profile, active in every module, runs [`scripts/CheckEncoding.java`](scripts/CheckEncoding.java) in the `validate` phase. The build fails if any file under `src/main` is not strictly decodable in the module's encoding, starts with a byte order mark, or is an XML file declaring a different encoding. Files containing `U+FFFD` are reported but don't fail the build.
 
 ### Java release
 
@@ -66,7 +85,7 @@ Requires JDK 25 and Maven 3.9.x (`central-publishing-maven-plugin` does not supp
 
 ```shell
 mvn clean verify                                 # all versions
-mvn clean verify -pl drivers/11.3.2.0053         # a single version
+mvn clean verify -pl drivers/11.3.1.0050         # a single version
 mvn -P central-releases -Dgpg.skip clean verify  # also with -sources.jar and -javadoc.jar
 ```
 
@@ -75,7 +94,7 @@ mvn -P central-releases -Dgpg.skip clean verify  # also with -sources.jar and -j
 The parent, [`io.github.jinahya:jinahya-parent`](https://central.sonatype.com/artifact/io.github.jinahya/jinahya-parent), provides the `central-releases` profile (signing, sources, javadoc, `central-publishing-maven-plugin`).
 
 ```shell
-mvn -P central-releases clean deploy -pl drivers/11.3.2.0053  # a single version
+mvn -P central-releases clean deploy -pl drivers/11.3.1.0050  # a single version
 mvn -P central-releases clean deploy                          # every version not yet published
 ```
 

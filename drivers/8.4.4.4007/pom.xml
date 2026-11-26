@@ -23,5 +23,7 @@
     <cubrid.source.sha256>927c7d01404551824cafaf977694e94eb1a5832875a769da7f1a02e3712cd5c5</cubrid.source.sha256>
     <!-- detected; the lowest release (minimum 8) the sources compile with -->
     <maven.compiler.release>8</maven.compiler.release>
+    <!-- detected; the sources are kept as is, and verified in the build (see the check-encoding profile) -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
