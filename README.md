@@ -95,8 +95,9 @@ The parent, [`io.github.jinahya:jinahya-parent`](https://central.sonatype.com/ar
 
 ```shell
 mvn -P central-releases clean deploy -pl drivers/11.3.1.0050  # a single version
-mvn -P central-releases clean deploy                          # every version not yet published
 ```
+
+**Do not deploy every version at once**; the Central throttles massive uploads. Deploy in batches, as planned and recorded in [DEPLOYMENTS.md](DEPLOYMENTS.md).
 
 Module poms are flattened (no parent) before being published, and the aggregator (`cubrid-jdbc-driver-parent`) is not published. Versions already on the Central are skipped (`ignorePublishedComponents`).
 
