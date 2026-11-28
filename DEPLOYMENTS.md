@@ -43,7 +43,7 @@ Newest first, 10 versions per batch. Fill in *Deployed* (date) when a batch is p
 | 12 | 10 | `8.4.4.3003`, `8.4.4.1001`, `8.4.4.0227`, `8.4.3.11001`, `8.4.3.10001`, `8.4.3.9001`, `8.4.3.8002`, `8.4.3.7001`, `8.4.3.6001`, `8.4.3.5001` | |
 | 13 | 10 | `8.4.3.4002`, `8.4.3.3001`, `8.4.3.1005`, `8.4.3.0150`, `8.4.1.35003`, `8.4.1.34002`, `8.4.1.33006`, `8.4.1.32003`, `8.4.1.31007`, `8.4.1.30011` | |
 | 14 | 10 | `8.4.1.29001`, `8.4.1.28003`, `8.4.1.25004`, `8.4.1.24002`, `8.4.1.23002`, `8.4.1.21001`, `8.4.1.12002`, `8.4.1.7007`, `8.4.1.6004`, `8.4.1.5002` | |
-| 15 | 2 | `8.4.1.4001`, `8.4.1.3024` | `8.4.1.3024`: 2026-11-26 (trial) |
+| 15 | 2 | `8.4.1.4001`, `8.4.1.3024` | `8.4.1.3024`: 2026-11-26 (trial); `8.4.1.4001`: 2026-11-28 |
 
 ## Log
 
@@ -51,4 +51,5 @@ One row per attempt, newest last. *Status* is `published`, `failed`, `dropped` o
 
 | Date | Batch | Versions | Deployment ID | Status | Notes |
 |---|---|---|---|---|---|
-| 2026-11-26 | 15 (trial) | `8.4.1.3024` | `b6e35435-f3e7-4be7-bda3-ff1614b267cb` | validated | First deployment, a single version to check the process. Bundle 957 KB (jar, sources, javadoc, pom; signatures and checksums). Validated; auto-publishing (`autoPublish`). Not yet on repo1 at the time of recording. |
+| 2026-11-26 | 15 (trial) | `8.4.1.3024` | `b6e35435-f3e7-4be7-bda3-ff1614b267cb` | published | First deployment, a single version to check the process. Bundle 957 KB (jar, sources, javadoc, pom; signatures and checksums). Validated; auto-published (`autoPublish`). Confirmed on repo1 on 2026-11-28. |
+| 2026-11-28 | 15 | `8.4.1.4001` | `15980231-69ff-4296-8aa1-0a01bd825175` | validated | A single version, the oldest undeployed. Checked first that `org.cubrid:cubrid-jdbc` has only `11.3.2.0053`. Validated; auto-publishing. Not yet on repo1 at the time of recording. |
