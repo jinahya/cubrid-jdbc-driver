@@ -52,4 +52,4 @@ One row per attempt, newest last. *Status* is `published`, `failed`, `dropped` o
 | Date | Batch | Versions | Deployment ID | Status | Notes |
 |---|---|---|---|---|---|
 | 2026-11-26 | 15 (trial) | `8.4.1.3024` | `b6e35435-f3e7-4be7-bda3-ff1614b267cb` | published | First deployment, a single version to check the process. Bundle 957 KB (jar, sources, javadoc, pom; signatures and checksums). Validated; auto-published (`autoPublish`). Confirmed on repo1 on 2026-11-28. |
-| 2026-11-28 | 15 | `8.4.1.4001` | `15980231-69ff-4296-8aa1-0a01bd825175` | validated | A single version, the oldest undeployed. Checked first that `org.cubrid:cubrid-jdbc` has only `11.3.2.0053`. Validated; auto-publishing. Not yet on repo1 at the time of recording. |
+| 2026-11-28 | 15 | `8.4.1.4001` | `15980231-69ff-4296-8aa1-0a01bd825175` | published | A single version, the oldest undeployed. Checked first that `org.cubrid:cubrid-jdbc` has only `11.3.2.0053`. Validated; auto-published. Confirmed on repo1 on 2026-11-28. |
